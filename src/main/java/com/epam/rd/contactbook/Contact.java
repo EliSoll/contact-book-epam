@@ -18,7 +18,7 @@ public class Contact {
     }
 
     private class NameContactInfo implements ContactInfo {
-        public String title = "Name";
+
 
 
 
@@ -26,7 +26,7 @@ public class Contact {
 
         @Override
         public String getTitle() {
-            return title;
+            return "Name";
         }
 
         @Override
