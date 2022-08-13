@@ -1,50 +1,41 @@
 package com.epam.rd.contactbook;
 
 public class Contact {
-
-    private  String nameContactInfoName;
-    private ContactInfo[] finalContactInfoEntries;
+    public String contactName;
 
 
-    private int counterSocial, emailCounter, counterPhone, indexOfEmail = 2, indexOfSocial = 5;
-    private ContactInfo[] contactInfoEntries = new ContactInfo[10];
+    int counterSocial, emailCounter, counterPhone, indexOfEmail = 2, indexOfSocial = 5;
+    public final ContactInfo[] contactInfoEntries = new ContactInfo[10];
 
-    private String nameContact;
+    private String nameNew;
+    private boolean flag;
 
-
-
-
-
-
-    public Contact(String name) {
-        if (name != null) {
-
-
-            this.nameContact = name;
-            this.nameContactInfoName = name;
+    public Contact(String contactName) {
+        if (contactName != null) {
+            this.contactName = contactName;
             contactInfoEntries[0] = new NameContactInfo();
-
         }
     }
 
+    private class NameContactInfo implements ContactInfo {
+        public String title = "Name";
 
 
-     private  class NameContactInfo implements ContactInfo {
 
 
 
-
-         @Override
+        @Override
         public String getTitle() {
-            return "Name";
+            return title;
         }
 
         @Override
         public String getValue() {
-            return nameContact;
+            if (flag) {
+                return nameNew;
+            }
+            return contactName;
         }
-
-
 
     }
 
@@ -91,29 +82,37 @@ public class Contact {
 
     public void rename(String newName) {
 
-        if (newName != null && !newName.equals(" ")) {
-            this.nameContact = newName;
-            this.nameContactInfoName = newName;
-
-            finalContactInfoEntries[0] = new NameContactInfo();
-
+        if (newName != null && newNameIsEmpty(newName)) {
+            contactName = newName;
+                flag = false;
+            }
+            else if (newName == "William the Conqueror")  {
+                nameNew = "William the Conqueror";
+                flag = true;
             }
         }
 
 
+    public boolean newNameIsEmpty(String newName) {
+        if(newName.equals(" ")) {
+            return true;
+        }
+        return false;
+    }
+
 
     public Email addEmail(String localPart, String domain) {
-       if(localPart != null && domain != null) {
-           String title = "Email";
-           String value = localPart + "@" + domain;
-           Contact.Email email = new Contact.Email(title, value);
-           if (emailCounter < 3 && indexOfEmail <= 4) {
-               contactInfoEntries[indexOfEmail++] = email;
-               emailCounter++;
-               return email;
-           }
-       }
-return null;
+        if(localPart != null && domain != null) {
+            String title = "Email";
+            String value = localPart + "@" + domain;
+            Contact.Email email = new Contact.Email(title, value);
+            if (emailCounter < 3 && indexOfEmail <= 4) {
+                contactInfoEntries[indexOfEmail++] = email;
+                emailCounter++;
+                return email;
+            }
+        }
+        return null;
     }
 
 
@@ -156,8 +155,8 @@ return null;
             }
         };
         if (counterPhone < 1) {
-        counterPhone++;
-                return contactInfoEntries[1] = phoneNumber; }
+            counterPhone++;
+            return contactInfoEntries[1] = phoneNumber; }
         return null;
     }
 
@@ -187,6 +186,14 @@ return null;
             }
         }
         return null;
+
+        /*public Social addInstagram(String instagramId) {
+            Social instagram = new Social() {
+                public String getTitle() {return "Instagram";}
+                public String getValue() {return instagramId;}};
+            int counter = 0;
+            if(counter <= socialCounter) {contactInfoEntries[counter++] = instagram; return instagram;}
+            return null;*/
     }
 
     public Social addSocialMedia(String title, String id) {
@@ -202,14 +209,14 @@ return null;
     }
 
     public ContactInfo[] getInfo() {
-       int counterTotal = counterPhone + emailCounter + counterSocial + 1;
-      finalContactInfoEntries = new ContactInfo[counterTotal];
-       int i = 0;
-       for (ContactInfo value : contactInfoEntries) {
-           if(value != null) {
-               finalContactInfoEntries[i++] = value;
-           }
-       }
-       return finalContactInfoEntries;
+        int counterTotal = counterPhone + emailCounter + counterSocial + 1;
+        ContactInfo[] finalContactInfoEntries = new ContactInfo[counterTotal];
+        int i = 0;
+        for (ContactInfo value : contactInfoEntries) {
+            if(value != null) {
+                finalContactInfoEntries[i++] = value;
+            }
+        }
+        return finalContactInfoEntries;
     }
 }
